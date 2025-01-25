@@ -73,5 +73,62 @@ By setting up two Virtual Machines, we can analyze traffic going in and out to e
 
 # Observing ICMP Traffic
 
-1. Login to the Remote Desktop with the Windows OS by using the VM's public IP Address and the login credentials created for the VM. The IP Address can be found by going to the VM itself. (For Mac users, please install Microsoft Remote Desktop)
-2. 
+1. Login to the Remote Desktop with the Windows OS by using the VM's public IP Address and the login credentials created for the VM. The IP Address can be found by going to the VM itself. (For Mac users, please install Microsoft Remote Desktop).
+2. Upon logging in to the Remote Desktop, download and install Wireshark from within the Remote Desktop. Keep the default installation settings as is. Same when the Npcap window pops up. Npcap installation is essential for Wireshark to gain access to PC packets.
+
+"Wireshark is a free and open-source packet analyzer. It is used for network troubleshooting, analysis, software and communications protocol development, and education."
+
+![image](https://github.com/user-attachments/assets/b418646c-4143-49d3-899f-989901e60153)
+
+
+3. Open Wireshark in the Remote Desktop, and filter for ICMP Traffic only. Then click on the blue shark button to initiate the filter.
+
+![image](https://github.com/user-attachments/assets/21837acd-faf2-4383-9e64-25adaddcc0ef)
+
+4. Next, we'll go back to Azure and find the Private IP Address for Linux. This can be found by going to the VM itself, by default the screen will be on the Overview page. From there, we can scroll to the Networking tab and see the Private IP Address, write it down as it's needed for the next step.
+
+
+5. Inside the Remote Desktop, search for "Windows Powershell" and open up the program.
+
+![image](https://github.com/user-attachments/assets/03a5754e-505f-43d9-b02a-c2cbba1b3696)
+
+6. In Windows Powershell, ping the Linux VM by entering the following command: "ping <ip address>" and then press enter. If done correctly, Wireshark will show the ICPM packets sent and received the two VMs.
+
+"ping is a command used to check if the current pc is able to have internet connectivity."
+
+![image](https://github.com/user-attachments/assets/d5deb4ad-8397-4250-a644-674a8e649d42)
+
+# Configuring a Firewall
+
+In this section, we'll configure a firewall with our Linux VM so that the Windows VM won't be able to receive any packets.
+
+4. We're going to create a new Inbound Security Rule, so that all ICMP traffic from the Linux VM's IP Address won't be able to reach the Windows VM. The screenshot shows the proper directory, and settings to be used to create the new rule. Click "Add" for settings to take effect.
+
+![image](https://github.com/user-attachments/assets/2eefd28a-29f2-4d97-9983-fa58870e6aaa)
+
+5. Go back to the Remote Desktop, and in it go to Windows Powershell and ping the Linux VM again. If setup properly, the request will time out.
+
+The remainder of this tutorial is completely optional, but it does show other ways to monitor packet capturing by utilizing other protocols.
+
+# Observing SSH Traffic
+1. Back in Wireshark, start a packet capture up
+2. Filter for SSH traffic only
+3 .From your Windows 10 VM, “SSH into” your Linux Virtual Machine (via its private IP address)
+4. Open PowerShell, and type: ssh username@<private IP address>
+5. Type commands (username, pwd, etc) into the Linux SSH connection and observe SSH traffic spam in WireShark
+6. Exit the SSH connection by typing ‘exit’ and pressing [Enter]
+
+# Observing DHCP Traffic
+1. Back in Wireshark, filter for DHCP traffic only
+2. From your Windows 10 VM, attempt to issue your VM a new IP address from the command line
+3. Open PowerShell as admin and run: ipconfig /renew
+4. Observe the DHCP traffic appearing in WireShark
+
+# Observing DNS Traffic
+1. Back in Wireshark, filter for DNS traffic only
+2. From your Windows 10 VM within a command line, use nslookup to see what google.com and disney.com’s IP addresses are
+3. Observe the DNS traffic being show in WireShark
+
+# Observing RDP Traffic
+1. Back in Wireshark, filter for RDP traffic only (tcp.port == 3389)
+2. Observe the immediate non-stop spam of traffic.
